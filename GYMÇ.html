@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GYMÇ 2026 - Geleceğin Yöneticileri Meclis Çalıştayı</title>
+    <style>
+        :root {
+            --dark: #0b1d35;
+            --gold: #c2a46b;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--dark);
+            color: white;
+            line-height: 1.7;
+        }
+
+        header {
+            background-color: var(--dark);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header img { height: 85px; }
+
+        nav a {
+            margin-left: 25px;
+            color: var(--gold);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        nav a:hover { color: white; }
+
+        /* Sağ Üst Butonlar */
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .header-btn {
+            background-color: var(--gold);
+            color: #0b1d35;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .header-btn:hover {
+            background-color: white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 180px 20px 140px;
+            background: linear-gradient(135deg, #0b1d35, #11284d);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 {
+            font-size: 5rem;
+            color: var(--gold);
+            letter-spacing: 6px;
+            animation: titleAnim 1.4s ease-out forwards;
+        }
+        .hero p {
+            font-size: 1.6rem;
+            max-width: 800px;
+            margin: 20px auto 0;
+            animation: subtitleAnim 1.4s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        @keyframes titleAnim {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes subtitleAnim {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        section {
+            padding: 90px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(80px);
+            transition: all 1s ease-out;
+        }
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section h2 {
+            color: var(--gold);
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        /* Ekip Kadrosu Başlığı Yanına Buton */
+        .ekip-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .apply-btn {
+            background-color: var(--gold);
+            color: #0b1d35;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .apply-btn:hover {
+            background-color: white;
+            transform: scale(1.05);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            justify-items: center;
+        }
+        .box {
+            background-color: #142541;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.4s;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            max-width: 340px;
+        }
+        .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(194, 164, 107, 0.25);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(11, 29, 53, 0.97);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #142541;
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 720px;
+            padding: 35px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 40px;
+            cursor: pointer;
+            color: var(--gold);
+        }
+
+        .ekip-list {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #142541;
+            padding: 40px;
+            border-radius: 12px;
+            border: 2px solid var(--gold);
+        }
+
+        footer {
+            text-align: center;
+            padding: 35px;
+            border-top: 3px solid var(--gold);
+            color: var(--gold);
+            background-color: #0a1828;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo.png" alt="GYMÇ 2026 Logosu" />
+    <nav>
+        <a href="#hakkinda">Hakkında</a>
+        <a href="#prosedur">Prosedür</a>
+        <a href="#komisyonlar">Komisyonlar</a>
+        <a href="#ekip">Ekip Kadrosu</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd9MeT_26pkrzcBSGjm-TfC2Oc5qDKg7tTBfJaGdrjCu2ZxsA/viewform">Başvuru </a>
+
+    </nav>
+    <div class="header-buttons">
+        <button class="header-btn" onclick="openContactModal()">İletişim</button>
+        <button class="header-btn" onclick="openLocationModal()">Konum</button>
+    </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>GYMÇ 2026</h1>
+    <p>Geleceğin Yöneticileri Meclis Çalıştayı <br> Üsküdar Anadolu İmam Hatip Lisesi Etkinliği</p>
+</div>
+
+<!-- HAKKINDA -->
+<section id="hakkinda">
+    <h2>Çalıştay Hakkında</h2>
+    <p style="font-size:1.25rem; max-width:950px; margin:auto; text-align:center;">
+        Geleceğin Yöneticileri Meclis Çalıştayı (GYMÇ), Türkiye’nin en kapsamlı lise düzeyinde parlamenter simülasyon programıdır. 
+        Üsküdar Anadolu İmam Hatip Lisesi tarafından düzenlenen bu etkinlik, gençleri gerçek TBMM işleyişine yakın bir ortamda 
+        siyaset, diplomasi, hukuk ve devlet yönetimi süreçlerini bizzat deneyimlemeye davet etmektedir.
+    </p>
+    <p style="font-size:1.2rem; max-width:950px; margin:35px auto; text-align:center;">
+        Katılımcılar, seçtikleri komisyonlarda delegelik yaparak karar taslakları hazırlayacak, müzakere edecek, 
+        oylamaya katılacak ve diplomatik nezaket kuralları çerçevesinde liderlik becerilerini geliştirecektir. 
+        GYMÇ, sadece bir simülasyon değil; gençlerin geleceğin sorumluluklarını bugünden üstlenmelerine olanak tanıyan 
+        önemli bir eğitim ve vizyon platformudur.
+    </p>
+</section>
+
+<!-- PROSEDÜR -->
+<section id="prosedur">
+    <h2>Genel Prosedür</h2>
+    <p style="max-width:850px; margin:auto; text-align:center; font-size:1.15rem;">
+        Çalıştay, Türkiye Büyük Millet Meclisi’nin işleyiş modeline sadık kalınarak özel olarak tasarlanmış bir sistemle yürütülür. 
+        Katılımcılar gerçek bir meclis atmosferinde karar alma, müzakere ve yasama süreçlerini deneyimleyecektir.
+    </p>
+    <ul style="max-width:750px; margin:40px auto; font-size:1.15rem; line-height:2.1;">
+        <li>Her komisyonda bir başkan ve başkan yardımcısı görev alır, oturumları yönetir.</li>
+        <li>Delegeler, temsil ettikleri görüş ve kurum adına karar taslakları hazırlar ve sunar.</li>
+        <li>Tüm oylamalar basit çoğunluk usulü ile yapılır.</li>
+        <li>Diplomatik nezaket, saygı ve etkili müzakere kuralları tüm süreç boyunca esastır.</li>
+        <li>Katılımcılar, farklı görüşleri dinleme, uzlaşma sağlama ve ortak akıl üretme becerilerini geliştirir.</li>
+    </ul>
+</section>
+
+<!-- KOMİSYONLAR -->
+<section id="komisyonlar">
+    <h2>Komisyonlarımız</h2>
+    <div class="grid">
+        <div class="box" onclick="openKomisyonModal(0)"><h3>⚖️ Adalet Komisyonu</h3><p>Hukuk, insan hakları ve adalet sistemi üzerine çalışmalar.</p></div>
+        <div class="box" onclick="openKomisyonModal(1)"><h3>🏛️ İçişleri Komisyonu</h3><p>İç güvenlik, kamu düzeni ve yerel yönetimler.</p></div>
+        <div class="box" onclick="openKomisyonModal(2)"><h3>🌍 Dışişleri Komisyonu</h3><p>Uluslararası ilişkiler ve diplomasi.</p></div>
+        <div class="box" onclick="openKomisyonModal(3)"><h3>🌱 Çevre ve İklim Değişikliği</h3><p>Sürdürülebilirlik ve iklim politikaları.</p></div>
+        <div class="box" onclick="openKomisyonModal(4)"><h3>💰 Ekonomi ve Kalkınma</h3><p>Kalkınma planları ve ekonomik vizyon.</p></div>
+        <div class="box" onclick="openKomisyonModal(5)"><h3>🩺 Sağlık ve Sosyal İşler</h3><p>Sağlık politikaları ve sosyal refah çalışmaları.</p></div>
+        <div class="box" onclick="openKomisyonModal(6)"><h3>🛡️ Milli Savunma Komisyonu</h3><p>Güvenlik stratejileri ve savunma politikaları.</p></div>
+    </div>
+</section>
+
+<!-- EKİP KADROSU -->
+<section id="ekip">
+    <div class="ekip-header">
+        <h2>Ekip Kadrosu</h2>
+        
+    </div>
+    <div class="ekip-list">
+        <h3 style="color:var(--gold); margin-bottom:25px;">Genel Koordinatör</h3>
+        <p style="font-size:1.25rem; margin-bottom:40px;">Muhammed Ömer Türkoğlu</p>
+
+        <h3 style="color:var(--gold); margin-bottom:25px;">Organizasyon Başkanı</h3>
+        <p style="font-size:1.25rem; margin-bottom:35px;">Taha Dursun</p>
+
+        <h3 style="color:var(--gold); margin:35px 0 20px;">Organizasyon Ekibi</h3>
+        <ul style="font-size:1.1rem; line-height:2.5; list-style:none; padding:0;">
+            <li><strong>Akademi Başkanı:</strong> Halil İbrahim Bağca</li>
+            <li><strong>PR Başkanı:</strong> Memet Kaya</li>
+            <li><strong>Saha Başkanı:</strong> Berra Keleş</li>
+            <li><strong>Basın Başkanı:</strong> Zehra Şentepe</li>
+            <li><strong>Kriz Başkanı:</strong> Mahmut Bedirhan Bolelli</li>
+            <li><strong>Lojistik Başkanı:</strong> Harun Hamza Sarıcı</li>
+            <li><strong>İT Başkanı:</strong> Harun Yahya Özden</li>
+            <li><strong>Medya Başkanı:</strong> Furkan Diner</li>
+        </ul>
+    </div>
+</section>
+
+<footer>
+    GYMÇ 2026 • Üsküdar Anadolu İmam Hatip Lisesi Etkinliği • Tüm Hakları Saklıdır © 2026
+</footer>
+
+<!-- KOMİSYON MODAL -->
+<div id="komisyonModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeKomisyonModal()">×</span>
+        <div id="komisyonBody"></div>
+    </div>
+</div>
+
+<!-- İLETİŞİM MODAL -->
+<div id="contactModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeContactModal()">×</span>
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 30px;">İletişim Bilgileri</h2>
+        <ul style="font-size:1.15rem; line-height:2.6; list-style:none; padding:0;">
+            <li><strong>Instagram:</strong> <a href="https://www.instagram.com/uskudargymc" target="_blank" style="color:#c2a46b;">@uskudargymc</a></li>
+            <li><strong>E-posta:</strong> <a href="mailto:uaihlmeclis@gmail.com" style="color:#c2a46b;">uaihlmeclis@gmail.com</a></li>
+            <li><strong>Organizasyon Başkanı:</strong> Taha Dursun — 0555 019 8830</li>
+            <li><strong>PR Başkanı:</strong> Memet Kaya — 0546 153 5404</li>
+        </ul>
+    </div>
+</div>
+
+<!-- KONUM MODAL -->
+<div id="locationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLocationModal()">×</span>
+        <h2 style="color: var(--gold); text-align: center; margin-bottom: 25px;">Etkinlik Yeri</h2>
+        <p style="font-size:1.25rem; text-align:center; line-height:1.9;">
+            <strong>İstanbul Medeniyet Üniversitesi</strong><br>
+            Göztepe Kuzey Yerleşkesi<br><br>
+            Kadıköy / İstanbul
+        </p>
+        <p style="text-align:center; margin-top:25px;">
+            <a href="https://www.google.com/maps/search/?api=1&query=İstanbul+Medeniyet+Üniversitesi+Göztepe+Kuzey+Yerleşkesi" 
+               target="_blank" style="color:var(--gold); text-decoration:underline; font-size:1.1rem;">
+                📍 Google Maps'te Aç
+            </a>
+        </p>
+    </div>
+</div>
+
+<script>
+    // Scroll Animasyonu
+    function handleScroll() {
+        const sections = document.querySelectorAll('section');
+        const triggerBottom = window.innerHeight * 0.85;
+
+        sections.forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
+            if (sectionTop < triggerBottom) {
+                section.classList.add('visible');
+            } else {
+                section.classList.remove('visible');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('load', handleScroll);
+
+    // Komisyon Modal
+    const komisyonDetay = [
+        { title: "⚖️ Adalet Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Muhammed Taha Gençol<br>Yusuf Karaca</p><p><strong>Konular:</strong></p><ul><li>Dijital çağda hukuk ve gençlerin korunması (siber zorbalık, dijital suçlar, internet güvenliği)</li><li>Eğitim kurumlarında adalet ve disiplin sistemleri (okul cezaları, alternatif adalet, öğrenci hakları)</li><li>Hukuk sisteminde eşitlik ve adalete erişim</li></ul>` },
+        { title: "🏛️ İçişleri Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Ayşe Yener<br>Enes Talha</p><p><strong>Konular:</strong></p><ul><li>Yerel yönetimlerde gençlerin demokratik katılımı</li><li>Toplumsal barış ve nefret suçlarıyla mücadele politikaları</li><li>Kentleşme, göç ve şehir planlaması</li></ul>` },
+        { title: "🌍 Dışişleri Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Muhammet Mustafa Ayas<br>Muhammed Emin Kayğısız</p><p><strong>Konular:</strong></p><ul><li>Kültürel diplomasi ve uluslararası ilişkiler</li><li>Küresel krizlerde devletlerin sorumluluğu ve insan hakları</li><li>Uluslararası iş birliği ve küresel sorunlara ortak çözümler</li></ul>` },
+        { title: "🌱 Çevre ve İklim Değişikliği Komisyonu (COP31)", content: `<p><strong>Komisyon Başkanları:</strong><br>İremnaz Yıldız<br>Medine Satukbuğra</p><p><strong>Konular:</strong></p><ul><li>Sürdürülebilir üretim ve tüketim</li><li>Şehirleşme ve yeşil alanların korunması</li><li>Gıda sürdürülebilirliği ve israfın azaltılması</li></ul>` },
+        { title: "💰 Ekonomi ve Kalkınma Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Nice Özcan<br>Burak Konukız</p><p><strong>Konular:</strong></p><ul><li>Dijital ekonomi ve finansal teknolojiler</li><li>Genç girişimciliği ve yenilikçilik</li><li>Büyük teknoloji şirketleri ve ekonomik rekabet</li></ul>` },
+        { title: "🩺 Sağlık ve Sosyal İşler Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Berra Şevval Afşar<br>Gönül Ecrin Kuru</p><p><strong>Konular:</strong></p><ul><li>Dijital yaşam ve gençlerin ruhsal/fiziksel sağlığı</li><li>Sağlık hizmetlerinde eşitlik ve erişim</li><li>Engelli bireylerin toplumsal katılımı</li></ul>` },
+        { title: "🛡️ Milli Savunma Komisyonu", content: `<p><strong>Komisyon Başkanları:</strong><br>Ali Osman Arslan<br>Hümeyra Karak</p><p><strong>Konular:</strong></p><ul><li>Yeni nesil savunma teknolojileri</li><li>Siber güvenlik ve dijital tehditler</li><li>Ulusal güvenlikte gençlerin stratejik iş birlikleri ve savunma politikaları</li></ul>` }
+    ];
+
+    function openKomisyonModal(index) {
+        document.getElementById("komisyonBody").innerHTML = `
+            <h2 style="color: var(--gold); margin-bottom: 25px;">${komisyonDetay[index].title}</h2>
+            ${komisyonDetay[index].content}
+        `;
+        document.getElementById("komisyonModal").style.display = "flex";
+    }
+
+    function closeKomisyonModal() {
+        document.getElementById("komisyonModal").style.display = "none";
+    }
+
+    // İletişim Modal
+    function openContactModal() {
+        document.getElementById("contactModal").style.display = "flex";
+    }
+
+    function closeContactModal() {
+        document.getElementById("contactModal").style.display = "none";
+    }
+
+    // Konum Modal
+    function openLocationModal() {
+        document.getElementById("locationModal").style.display = "flex";
+    }
+
+    function closeLocationModal() {
+        document.getElementById("locationModal").style.display = "none";
+    }
+</script>
+
+</body>
+</html>
